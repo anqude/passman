@@ -1,12 +1,26 @@
-from customtkinter import CTkLabel,CTkButton,CTkEntry,CTkScrollableFrame,CTkTabview,CTk,get_appearance_mode
-from logics import *
+from customtkinter import CTkLabel,CTkButton,CTkEntry,CTkScrollableFrame,CTkTabview,CTk,get_appearance_mode,set_widget_scaling,set_window_scaling
 from tkinter import PhotoImage
 import os
+import sys
+
 window = CTk()
-window.title("PassMan by Anqude")
 scriptdir=os.path.abspath(__file__)
-os.chdir(scriptdir.removesuffix('/PassmanGUI.py'))
-window.tk.call('wm', 'iconphoto', window._w, PhotoImage(file='./ui/icon.png'))
+
+try:
+	direct=scriptdir.removesuffix('\PassmanGUI.py')
+	assert os.path.isdir(direct), 'You fucked bro'
+	
+except:
+	direct=scriptdir.removesuffix('/PassmanGUI.py')
+
+sys.path.append(direct)
+
+
+
+from logics import *
+window.title("PassMan by Anqude")
+
+
 theme=get_appearance_mode()
 if theme=="Dark":
 	bg_color="#242424"
@@ -14,6 +28,10 @@ if theme=="Dark":
 else:
 	fg_color="#242424"
 	bg_color="#dbdbdb"
+	
+scriptdir=os.path.abspath(__file__)
+os.chdir(direct)
+window.tk.call('wm', 'iconphoto', window._w, PhotoImage(file='./ui/icon.png'))
 tabview = CTkTabview(window)
 tab_write=tabview.add("Write") # add tab at the end
 tab_read=tabview.add("Read")  # add tab at the end
@@ -210,4 +228,33 @@ Site_label.grid(row=0, column=0,padx=12,pady=10)
 Login_label.grid(row=1, column=0,padx=12,pady=10)
 Password_label.grid(row=2, column=0,padx=12,pady=10)
 SaveBut.grid(row=3, column=1,padx=12,pady=10)
+def importFF():
+	paths=importEntry.get()
+	importcsv(paths,get_password())
+	readl()
+	importLabel.pack_forget()
+	importBD.pack_forget()
+	importEntry.pack_forget()
+	tabview.pack(fill="both", expand=True,anchor='center')
+	importB.pack(fill="x", expand=True,padx=5,pady=5, side="top",anchor="n")
+	ExportB.pack(fill="x", expand=True,padx=5,pady=5, side="top",anchor="n")
+	importEntry.delete(0, 'end')
+	
+importLabel=CTkLabel(window,text="Path:")
+importEntry=CTkEntry(window)
+def importDialog():
+	tabview.pack_forget()
+	importB.pack_forget()
+	ExportB.pack_forget()
+	importLabel.pack(fill="x", expand=True,padx=5,pady=5, side="top",anchor="n")
+	importEntry.pack(fill="x", expand=True,padx=5,pady=5, side="top",anchor="n")
+	importBD.pack(fill="x", expand=True,padx=5,pady=5, side="top",anchor="n")
+def Export():
+	exportFF(get_password())
+ExportB=CTkButton(tab_read,command=Export,text="Export!")
+importB=CTkButton(tab_read,command=importDialog,text="Import!")
+
+importBD=CTkButton(window,command=importFF,text="Import!")
+importB.pack(fill="x", expand=True,padx=5,pady=5, side="top",anchor="n")
+ExportB.pack(fill="x", expand=True,padx=5,pady=5, side="top",anchor="n")
 window.mainloop()

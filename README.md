@@ -4,7 +4,7 @@
 ### Dependencies
 **Python**
 ```sh
-pip install tk pyperclip qrcode customtkinter pyAesCrypt
+pip install tk pyperclip qrcode customtkinter pyAesCrypt stdiomask
 ```
 
 **On debian**
